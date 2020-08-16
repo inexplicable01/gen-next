@@ -4,9 +4,9 @@
     "slug": "gen-next",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/gnf_logo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/gnf_fulllogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
