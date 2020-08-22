@@ -13,8 +13,6 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-
-  
   return (
     <NavigationContainer>
       <Tab.Navigator>
@@ -28,7 +26,16 @@ export default function App() {
             ),
           }}
         />
-        {/* <Stack.Screen name="Agenda" component={AgendaScreen} /> */}
+        {/* <Tab.Screen
+          name="Agenda"
+          component={AgendaScreen}
+          options={{
+            tabBarLabel: "HomeMadeCalendar",
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="address-book" color={color} size={size} />
+            ),
+          }}
+        /> */}
         <Tab.Screen
           name="Projections"
           component={ProjectionScreen}

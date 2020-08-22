@@ -49,12 +49,14 @@ const styles = StyleSheet.create({
     // borderWidth:2,
     width: "100%",
     height: "100%",
+    borderRadius:30,
     // backgroundColor:'tomato'
   },
   headerimage: {
     width: "100%",
     height: "100%",
     resizeMode: "contain",
+    borderRadius:15
   },
   headerview: {
     flex: 6,

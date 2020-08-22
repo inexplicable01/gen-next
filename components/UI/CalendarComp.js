@@ -82,7 +82,7 @@ const CalendarComp = props =>{
         textDayFontWeight: "300",
         textMonthFontWeight: "bold",
         textDayHeaderFontWeight: "300",
-        textDayFontSize: 24,
+        textDayFontSize: 14,
         textMonthFontSize: 20,
         textDayHeaderFontSize: 14,
       }
@@ -145,10 +145,15 @@ const CalendarComp = props =>{
       height: '100%',
       width: 360,
       borderRadius:30,
-      marginBottom:15
+      // marginBottom:15
     }}
     // Specify theme properties to override specific styles for calendar parts. Default = {}
-    theme={caltheme}
+    theme={{...caltheme, 
+    'stylesheet.day.basic':{
+      text:{
+        
+      }
+    }}}
   />
 }
 

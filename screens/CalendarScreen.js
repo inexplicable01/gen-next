@@ -22,7 +22,7 @@ const CalendarScreen = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("initiate data");
+    // console.log("initiate data");
     initializeData();
   }, []);
 
@@ -30,7 +30,7 @@ const CalendarScreen = (props) => {
     await dispatch(calendarActions.initiatecalendar());
   };
 
-  console.log("why is useeffect");
+  // console.log("why is useeffect");
 
   return (
     <View style={styles.mainview}>
