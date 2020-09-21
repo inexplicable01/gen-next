@@ -4,29 +4,20 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProjectionScreen from "../screens/ProjectionScreen";
-import CalendarScreen from "../screens/CalendarScreen";
+// import CalendarScreen from "../screens/CalendarScreen";
 import AgendaScreen from "../screens/AgendaScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
+
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
-          name="Calendar"
-          component={CalendarScreen}
-          options={{
-            tabBarLabel: "Calendar",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="calendar" color={color} size={size} />
-            ),
-          }}
-        />
-        {/* <Tab.Screen
           name="Agenda"
           component={AgendaScreen}
           options={{
@@ -35,7 +26,7 @@ export default function App() {
               <Icon name="address-book" color={color} size={size} />
             ),
           }}
-        /> */}
+        />
         <Tab.Screen
           name="Projections"
           component={ProjectionScreen}

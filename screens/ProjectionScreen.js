@@ -1,66 +1,77 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Picker } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import Header from "../components/templates/Header";
 import { useSelector } from "react-redux";
 import TableRow from "../components/table/TableRow";
+import { projectionMatrix } from "../definitions/ProjectionUtils";
 // import { Dropdown } from "react-native-material-dropdown";
-import DropDownPicker from "react-native-dropdown-picker";
-import Icon from "react-native-vector-icons/Feather";
-import { Switch } from "react-native-gesture-handler";
-
-const pregancy = {
-  pregancytest: { days: 14, label: "Pregancy Test" },
-  trimester: { days: 90, label: "Trimester" },
-  hundredtwentydays: { days: 120, label: "120 Days" },
-  childbirth: { days: 270, label: "Child Birth" },
-};
-
-const injection = {
-  pregancytest: { days: 25, label: "Pregancy Test" },
-  trimester: { days: 90, label: "Trimester" },
-  hundredtwentydays: { days: 120, label: "120 Days" },
-  twohundreddays: { days: 200, label: "Two Hundred" },
-  childbirth: { days: 280, label: "Child Birth" },
-};
 
 const ProjectionScreen = (props) => {
   const calendar = useSelector((state) => state.calendar);
-  const [schedule, setSchedule] = useState(null);
-  const [selectedValue, setSelectedValue] = useState("java");
+  // const [schedule, setSchedule] = useState(null);
+  const [schedule, setSchedule] = useState();
   //   console.log(Object.entries(pregancy));
 
-  useEffect(() => {
-    // console.log("changed to", selectedValue);
-    switch (selectedValue) {
-      case "pregancy":
-        setSchedule({
-          ...pregancy,
-        });
-        break;
-      case "injection":
-        setSchedule({
-          ...injection,
-        });
-    }
-  }, [selectedValue]);
+  const schedulePress = (schedule) => {
+    // console.log(schedule)
+    setSchedule(schedule)
+  }
 
-  // console.log(Object.keys(schedule));
+  // useEffect(() => {
+  //   // console.log("changed to", selectedSchedule);
+  //   switch (selectedSchedule) {
+  //     case "pregancy":
+  //       setSchedule({
+  //         ...pregancy,
+  //       });
+  //       break;
+  //     case "injection":
+  //       setSchedule({
+  //         ...injection,
+  //       });
+  //   }
+  // }, [selectedSchedule]);
+
+  // console.log(projectionMatrix);
   return (
     <View style={styles.mainview}>
       <Header extrastyles={{ flex: 1 }} title={"Projection"} />
 
       <View style={styles.content}>
-        <Picker
-          selectedValue={selectedValue}
-          style={{ height: 50, width: 150 }}
-          onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-        >
-          <Picker.Item label="Select" value="select"  />
-          <Picker.Item label="Pregancy" value="pregancy" />
-          <Picker.Item label="Injection" value="injection" />
-        </Picker>
-
         <Text>Project from : {calendar.selected}</Text>
+        <View
+          style={{ width: "80%", backgroundColor: "grey", borderRadius: 10 }}
+        >
+          <FlatList
+            data={Object.keys(projectionMatrix)}
+            keyExtractor={(item) => {
+              // console.log(item.monthno);
+              return item;
+            }}
+            horizontal={true}
+            renderItem={(projecttype, index, sep) => {
+              // console.log(month.item.wkarr)
+              return (
+                <TouchableOpacity onPress={schedulePress.bind(this, projecttype.item)}
+                  style={{
+                    backgroundColor: "lightgrey",
+                    padding: 10,
+                    borderRadius: 10,
+                    borderColor: "black",
+                    borderWidth: 2,
+                    margin: 10,
+                    height: 60,
+                    width: 120,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>{projecttype.item}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
 
         <View style={styles.dataview}>
           {schedule ? (
@@ -71,12 +82,12 @@ const ProjectionScreen = (props) => {
                 header={true}
               />
               <FlatList
-                data={Object.keys(schedule)}
+                data={Object.keys(projectionMatrix[schedule])}
                 keyExtractor={(item, index) => "" + index}
                 renderItem={({ item }) => (
                   <TableRow
-                    entry={schedule[item].label}
-                    fields={addDays(schedule[item].days, calendar.curdateobj)}
+                    entry={projectionMatrix[schedule][item].label}
+                    fields={addDays(projectionMatrix[schedule][item].days, calendar.curdateobj)}
                   />
                 )}
                 style={{ width: "100%" }}
@@ -122,9 +133,9 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "flex-start",
     // backgroundColor: "yellow",
-    borderRadius:10,
+    borderRadius: 10,
     // borderWidth:2,
-    padding:5
+    padding: 5,
   },
   content: {
     width: "100%",
@@ -133,7 +144,7 @@ const styles = StyleSheet.create({
     flex: 12,
     justifyContent: "center",
     alignItems: "center",
-    margin:20,
+    margin: 20,
   },
 });
 

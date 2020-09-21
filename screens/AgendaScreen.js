@@ -1,136 +1,105 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  PanResponder,
+} from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 import Header from "../components/templates/Header";
-import { FlatList } from "react-native-gesture-handler";
-// import * from
+// import { FlatList } from "react-native-gesture-handler";
+import Notes from "../components/UI/Notes";
 
-const divideIntoSeven = (days) => {
-  const mday = new Date(Date.now() - (days/2)*24*60*60*1000)
+// import { MonthName, dateToCustomObject } from "../definitions/HMCalendarUtils";
 
-  console.log(mday)
-  const daysarr = [];
-  const firstweek = new Array(7);
-  for (let i = 0; i < 7; i++){
-    // console.log(m90day.getTime() - (m90day.getDay()-1-i)*24*60*60*1000)
-    firstweek[i] = new Date(mday.getTime() - (mday.getDay()-1-i)*24*60*60*1000)
-  }
-  daysarr.push(firstweek)
-  // console.log('f',firstweek)
-  const roundeddays = days - days %7
-  const daystonewweek = 7 - mday.getDay()+1
+import * as calendarActions from "../store/actions/calendar";
+import InfiScrollCalendar from "../components/calendarutil/InfiScrollCalendar";
+// import CurrentDayText from "../components/UI/CurrentDayText";
 
-  // console.log('roundeddays',roundeddays)
-  for (let iweeks = 0; iweeks < roundeddays/7; iweeks++) {
-    const weekarr = [];
-    for (let idays = 0; idays < 7; idays++) {
-      // weekarr[seven] = days.shift();
-      weekarr[idays]= new Date(mday.getTime() + (idays+daystonewweek+ iweeks*7)*24*60*60*1000)
+const AgendaScreen = (props) => {
+  const dispatch = useDispatch();
+  // const [listlength, setListlength] = useState(100);
+  const [calendarLoading, setCalendarLoading] = useState(false);
+  const [editmode, setEditMode] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const modeliststr = useSelector((state) => state.calendar.modeliststr);
+  // const pan = useRef(new Animated.ValueXY()).current;
+
+  // const rand = Math.floor(Math.random() * 6 + 1);
+
+  const daypressed = (dateobj) => {
+    // console.log(dateobj);
+    if (editmode) {
+      dispatch(calendarActions.addIcon(dateobj));
+    } else {
+      dispatch(calendarActions.setdate(dateobj));
     }
-    daysarr.push(weekarr);
-  }
-  return daysarr;
-};
-
-
-const CalendarScreen = (props) => {
-  const [listlength, setListlength] = useState(100);
-  const [isLoading, setIsLoading] = useState(false)
-  const calendar = useSelector((state) => state.calendar);
-  const days = divideIntoSeven(180);
-  const rand = Math.floor(Math.random() * 6 + 1);
-  const flatlistRef = useRef(null);
-  const populateCalendar = () => {
-    console.log("hehe");
-    setListlength((l) => l + 100);
   };
 
-  useEffect(() => {
-    // flatlistRef.current.scrollToOffset({ offset: 300, animated: true });
-    // flatlistRef.current.scrollToIndex({ index: 2, animated: true });        
-  }, []);
+  const TEXT_LENGTH = 40;
+  const TEXT_HEIGHT = 14;
+  const OFFSET = TEXT_LENGTH / 2 - TEXT_HEIGHT / 2;
 
-  const getItemLayout = (data, index) => (
-    { length: 50, offset: 300, index }
-  )
+  const goEditMode = (modeliststr) => {
+    // console.log(modeliststr.name)
+    dispatch(calendarActions.setIcon(modeliststr));
+    setModalVisible(false);
+    setEditMode(true);
+  };
 
-  // console.log(days);
   return (
     <View style={styles.mainview}>
-      <Header extrastyles={{ flex: 1 }} />
-      <Text>Current Date: {calendar.currentdate}</Text>
+      <Header extrastyles={{ flex: 2 }} title={"Calendar"} />
+      
       <View style={styles.calendarcomp}>
-        <View style={{ flex: 6 }}>
-          <FlatList
-            data={days}
-            style={{ borderWidth: 2, padding: 25 }}
-            onEndReachedThreshold={0.5}
-            ref={flatlistRef}
-            refreshing={true}
-            // getItemLayout={getItemLayout}
-
-            initialScrollIndex={6}
-            keyExtractor={(item) => ''+item[0].getTime()}
-            onEndReached={populateCalendar}
-            onScroll={(scrollinfo)=>{console.log(scrollinfo.nativeEvent.contentOffset.y)}}
-            onScrollToIndexFailed={() => {
-              }}
-            renderItem={(week, index, sep) => {
-              return <CalLine daysnumbers={week.item} />;
-            }}
+        <View style={editmode? {...styles.calendarcontain, borderColor:'red'}:styles.calendarcontain} pointerEvents={calendarLoading ? "none" : "auto"}>
+          <InfiScrollCalendar
+            onDayPressed={daypressed}
+            setCalendarLoading={setCalendarLoading}
           />
-
         </View>
+        {editmode ? (
+          <View>
+            <Text>Edit Mode : Press date to add {modeliststr.name}</Text>
+          </View>
+        ) : (
+          <View>
+            <Text>  </Text>
+          </View>
+        )}
 
-        <View style={{ borderWidth: 2, flex: 3 }}>
-          <Text>Fup</Text>
-        </View>
+        <Notes
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          goEditMode={goEditMode}
+          editmode={editmode}
+          setEditMode={setEditMode}
+          additionalstyle={{
+            flex: 4,
+            width: "100%",
+            paddingRight: 2,
+            marginRight: 2,
+          }}
+        />
       </View>
     </View>
   );
-};
-
-const MonthBlock = ()=>{
-  
-}
-
-const CalLine = (props) => {
-  var day = [];
-  // console.log(props.daysnumbers)
-  // const numofcheckbox = props.downselecteddata.length;
-  // console.log(props.daysnumbers)
-  const today = new Date();
-  // const istoday = 
-  for (let i = 0; i < props.daysnumbers.length; i++) {
-    day.push(
-      <View key={i} style={styles.days}>
-        <Text>{props.daysnumbers[i].getMonth()+1} {props.daysnumbers[i].getDate()}</Text>
-        {(props.daysnumbers[i].getDate()==today.getDate())?<Text>Tada</Text>:
-          <Text>C</Text>
-        }
-        
-      </View>
-    );
-  }
-
-  return <View style={styles.callinestyle}>{day}</View>;
 };
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
   },
-  callinestyle: {
-    flexDirection: "row",
+  calendarcontain: {
+    flex: 8,
     width: "100%",
-    justifyContent: "space-around",
-    backgroundColor: "teal",
-  },
-  days: {
-    flex: 1,
-    padding: 4,
-    borderWidth: 2,
+    backgroundColor: "black",
+    borderColor: "green",
+    borderWidth: 4,
+    borderRadius: 10,
   },
   mainview: {
     flex: 1,
@@ -143,13 +112,19 @@ const styles = StyleSheet.create({
   calendarcomp: {
     width: "100%",
     borderWidth: 2,
-    backgroundColor: "yellow",
-    flex: 17,
+    backgroundColor: "#F7E5F2",
+    flex: 25,
     padding: 10,
     // height:500,
     justifyContent: "center",
     alignItems: "center",
   },
+  box: {
+    height: 150,
+    width: 150,
+    backgroundColor: "blue",
+    borderRadius: 5,
+  },
 });
 
-export default CalendarScreen;
+export default AgendaScreen;

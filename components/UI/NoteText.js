@@ -1,15 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { notescaldefinition } from "../../definitions/Notices";
+import {  findcolor } from "../../definitions/Notices";
 
-const findcolor = (word) => {
-  for (const notice of Object.keys(notescaldefinition)) {
-    if (notescaldefinition[notice].liststr.includes(word)) {
-      return notescaldefinition[notice].dotdef.color;
-    }
-  }
-  return 'gainsboro'
-};
+
 
 const NoteText = (props) => {
   const textarray = [];

@@ -12,7 +12,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import * as calendarActions from "../../store/actions/calendar";
 import { notescaldefinition } from "../../definitions/Notices";
-import Checkbox3 from "../../components/UI/Checkbox3";
+// import Checkbox3 from "../../components/UI/Checkbox3";
+import NoticeItem from "../../components/UI/NoticeItem";
 
 let noticeOrders = new Array(Object.keys(notescaldefinition).length);
 
@@ -47,37 +48,24 @@ const MedicineModal = (props) => {
     setDayNoteArr(checksinfo);
   }, [calendar.selected, props.modalVisible]);
 
-  const saveNotes = async () => {
-    // console.log('huh',checkselected(daynotesarr))
-    try {
-      await dispatch(
-        calendarActions.savecalendar(
-          calendar.selected,
-          checkselected(daynotesarr)
-        )
-      );
-    } catch (err) {
-      console.log("err", err);
-      props.setModalVisible(false);
-    }
-    props.setModalVisible(false);
-  };
+ 
 
-  const checkedchange = (notice, act) => {
-    setDayNoteArr({
-      ...daynotesarr,
-      [notice]: daynotesarr[notice].map((item) => {
-        if (item.liststr === act) {
-          return { ...item, checked: !item.checked };
-        } else {
-          return item;
-        }
-      }),
-    });
-  };
+  // const checkedchange = (notice, act) => {
+  //   setDayNoteArr({
+  //     ...daynotesarr,
+  //     [notice]: daynotesarr[notice].map((item) => {
+  //       if (item.liststr === act) {
+  //         return { ...item, checked: !item.checked };
+  //       } else {
+  //         return item;
+  //       }
+  //     }),
+  //   });
+  // };
+
 
   //   console.log("day", daynotesarr);
-
+  //  console.log(noticeOrders)
   return (
     <Modal
       animationType="slide"
@@ -95,44 +83,19 @@ const MedicineModal = (props) => {
           <FlatList
             data={noticeOrders}
             style={{
-              //   backgroundColor: "orange",
               width: "100%",
               borderRadius: 10,
               padding: 5,
             }}
             renderItem={(notice) => {
+              // console.log(notescaldefinition[notice])
               return (
-                <View
-                  style={{
-                    borderRadius: 5,
-                    // margin: 2,
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: notescaldefinition[notice.item].dotdef.color,
-                      alignSelf: "flex-start",
-                      borderRadius: 5,
-                      margin: 2,
-                      padding: 2,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontSize: 18,
-                        padding: 2,
-                      }}
-                    >
-                      {notice.item}
-                    </Text>
-                  </View>
-                  <Checkbox3
-                    data={daynotesarr[notice.item]}
-                    checkedchange={checkedchange}
-                    notice={notice.item}
-                  />
-                </View>
+                <NoticeItem
+                  notice={notice.item}
+                  goEditMode = {props.goEditMode}
+                  liststr={notescaldefinition[notice.item].liststr}
+                  color={notescaldefinition[notice.item].dotdef.color}
+                />
               );
             }}
             keyExtractor={(item) => item}
@@ -146,21 +109,6 @@ const MedicineModal = (props) => {
               width: "100%",
             }}
           >
-            <TouchableHighlight
-              style={{ ...styles.touchbutton }}
-              onPress={saveNotes}
-            >
-              <Text style={styles.buttontextStyle}>Save</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-              style={{ ...styles.touchbutton }}
-              onPress={() => {
-                props.setModalVisible(false);
-              }}
-            >
-              <Text style={styles.buttontextStyle}>Cancel</Text>
-            </TouchableHighlight>
           </View>
         </View>
       </View>

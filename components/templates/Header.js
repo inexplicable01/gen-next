@@ -9,14 +9,14 @@ const Header = (props) => {
         <Icon name="bars" size={24} />
       </View>
       <View style={styles.headerview}>
-        <View style={styles.headerpic}>
+        {/* <View style={styles.headerpic}>
           <Image
             source={require("../../assets/gnf_logo.png")}
             //   resizeMode='stretch'
             //   resizeMethod='auto'
             style={styles.headerimage}
           />
-        </View>
+        </View> */}
         <Text style={styles.titletext}>{props.title}</Text>
       </View>
       <View style={styles.rightheader}>
@@ -33,10 +33,13 @@ const styles = StyleSheet.create({
   },
   mainview: {
     // flex:1,
+    backgroundColor:'#FF89DE',
     flexDirection: "row",
     // height: 300,
     justifyContent: "center",
     alignItems: "center",
+    paddingLeft:20,
+    paddingRight:20
   },
   leftheader: {
     flex: 1,
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "contain",
-    borderRadius:15
+    // borderRadius:15
   },
   headerview: {
     flex: 6,
@@ -65,8 +68,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titletext: {
-    flex: 4,
-    fontSize: 30,
+    alignSelf:'center',
+    fontSize: 20,
     
   },
   rightheader: {

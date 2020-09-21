@@ -4,12 +4,14 @@ export const SET_CURRENTDATE = "SET_CURRENTDATE";
 export const DOT_DATES = "DOT_DATES";
 export const INITIATE_CALENDAR = "INITIATE_CALENDAR";
 export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
+export const SET_EDITMODEICON = "SET_EDITMODEICON";
+export const ADD_ICON = "ADD_ICON";
 
 
 
 export const setdate = (day) => {
   // const dateString = day.dateString
-  return { type: SET_CURRENTDATE, date: day.dateString };
+  return { type: SET_CURRENTDATE, dateString: day.dateString };
 };
 
 export const dotdate = (day) => {
@@ -17,29 +19,17 @@ export const dotdate = (day) => {
   return { type: DOT_DATES, date: day.dateString };
 };
 
-export const savecalendar = (date, notedetails) => {
-  return async (dispatch, getState) => {
-    const calendarnotes = {
-      ...getState().calendar.calendarnotes,
-      [date]: notedetails,
-    };
+// export const savecalendar = () => {
+//   return async (dispatch, getState) => {
+ 
 
-    const notes = JSON.stringify(calendarnotes);
-
-    // console.log('saving', notes)
-    try {
-      await AsyncStorage.setItem("CalendarNotes", notes);
-
-    } catch (err) {
-      console.log(err);
-    }
-    // console.log('saved', calendarnotes)
-    dispatch({
-        type: UPDATE_CALENDAR,
-        calendarnotes: calendarnotes,
-      });
-  };
-};
+//     // console.log('saved', calendarnotes)
+//     dispatch({
+//         type: UPDATE_CALENDAR,
+//         calendarnotes: calendarnotes,
+//       });
+//   };
+// };
 
 export const loadcalendar = () => {};
 
@@ -49,7 +39,7 @@ export const initiatecalendar = () => {
     try {
         // console.log("value");
       const value = await AsyncStorage.getItem("CalendarNotes");
-    //   console.log("value", value);
+      // console.log("value", value);
       if (value !== null) {
         // We have data!!
         const calendarnotes = JSON.parse(value);
@@ -72,24 +62,16 @@ export const initiatecalendar = () => {
   };
 };
 
-//  const textcalendarnotes = {
-//   "2020-08-16": ["sex"],
-//   "2020-08-17": ["hug", "handholding"],
-//   "2020-08-18": [
-//     "sex",
-//     "hug",
-//     "handholding",
-//     "teno",
-//     "pilly",
-//     "tenoli",
-//     "injection",
-//     "extraction",
-//     "checkup",
-//     "payment",
-//   ],
-//   "2020-08-19": ["sex", "handholding", "pilly", "extraction", "payment"],
-//   "2020-08-01": ["sex", "handholding", "extraction", "payment"],
-//   "2020-08-02": ["handholding", "payment"],
-// };
+
+export const setIcon = (modeliststr) => {
+  // const dateString = day.dateString
+  return { type: SET_EDITMODEICON, modeliststr: modeliststr};
+};
+
+export const addIcon = (day) => {
 
 
+
+
+  return { type: ADD_ICON, dateString: day.dateString};
+};
