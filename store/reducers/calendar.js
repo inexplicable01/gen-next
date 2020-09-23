@@ -4,7 +4,8 @@ import {
   INITIATE_CALENDAR,
   UPDATE_CALENDAR,
   SET_EDITMODEICON,
-  ADD_ICON
+  ADD_ICON,
+  CURRENTCALENDARMONTH
 } from "../actions/calendar";
 
 const curDate = new Date();
@@ -27,6 +28,7 @@ const initialState = {
   selected: curDate.toISOString().split("T")[0],
   calendarnotes: {},
   modeliststr: null,
+  monthkey:null
 };
 
 export default (state = initialState, action) => {
@@ -40,7 +42,13 @@ export default (state = initialState, action) => {
     // case UPDATE_CALENDAR:
     //   return {
     //     ...state
-    //   };
+    //   }
+    case CURRENTCALENDARMONTH:
+      // console.log('got to here', action.monthkey)
+      return {
+        ...state,
+        monthkey:action.monthkey
+      }
     case SET_CURRENTDATE:
       // console.log(state.calendarnotes)
       return {

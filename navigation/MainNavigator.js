@@ -11,7 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 
 const Tab = createBottomTabNavigator();
-// const Stack = createStackNavigator();
+
 
 export default function App() {
   return (
@@ -21,9 +21,9 @@ export default function App() {
           name="Agenda"
           component={AgendaScreen}
           options={{
-            tabBarLabel: "HomeMadeCalendar",
+            tabBarLabel: "Calendar",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="address-book" color={color} size={size} />
+              <Icon name="calendar-alt" color={color} size={size} />
             ),
           }}
         />
@@ -33,7 +33,7 @@ export default function App() {
           options={{
             tabBarLabel: "Projections",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="table" color={color} size={size} />
+              <Icon name="address-book" color={color} size={size} />
             ),
           }}
         />

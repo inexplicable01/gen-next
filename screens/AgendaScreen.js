@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Animated,
-  PanResponder,
+  AsyncStorage,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -17,18 +17,14 @@ import Notes from "../components/UI/Notes";
 
 import * as calendarActions from "../store/actions/calendar";
 import InfiScrollCalendar from "../components/calendarutil/InfiScrollCalendar";
-// import CurrentDayText from "../components/UI/CurrentDayText";
+
 
 const AgendaScreen = (props) => {
   const dispatch = useDispatch();
-  // const [listlength, setListlength] = useState(100);
-  const [calendarLoading, setCalendarLoading] = useState(false);
+
   const [editmode, setEditMode] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const modeliststr = useSelector((state) => state.calendar.modeliststr);
-  // const pan = useRef(new Animated.ValueXY()).current;
-
-  // const rand = Math.floor(Math.random() * 6 + 1);
+  const {modeliststr,calendarnotes }= useSelector((state) => state.calendar);
 
   const daypressed = (dateobj) => {
     // console.log(dateobj);
@@ -39,10 +35,6 @@ const AgendaScreen = (props) => {
     }
   };
 
-  const TEXT_LENGTH = 40;
-  const TEXT_HEIGHT = 14;
-  const OFFSET = TEXT_LENGTH / 2 - TEXT_HEIGHT / 2;
-
   const goEditMode = (modeliststr) => {
     // console.log(modeliststr.name)
     dispatch(calendarActions.setIcon(modeliststr));
@@ -50,40 +42,74 @@ const AgendaScreen = (props) => {
     setEditMode(true);
   };
 
+  const saveNotes = async () => {
+    // console.log('huh',checkselected(daynotesarr))
+    const notes = JSON.stringify(calendarnotes);
+    try {
+      await AsyncStorage.setItem("CalendarNotes", notes);
+    } catch (err) {
+      console.log(err);
+    }
+    setEditMode(false);
+  };
+
   return (
     <View style={styles.mainview}>
       <Header extrastyles={{ flex: 2 }} title={"Calendar"} />
-      
       <View style={styles.calendarcomp}>
-        <View style={editmode? {...styles.calendarcontain, borderColor:'red'}:styles.calendarcontain} pointerEvents={calendarLoading ? "none" : "auto"}>
-          <InfiScrollCalendar
-            onDayPressed={daypressed}
-            setCalendarLoading={setCalendarLoading}
-          />
+        <InfiScrollCalendar
+          onDayPressed={daypressed}
+          calendarstyle={{ flex: 8, width: "100%" }}
+        />
+
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ color: "orange" }}>
+            {editmode
+              ? "Edit Mode : Press date to add " + modeliststr.name
+              : "  "}
+          </Text>
         </View>
-        {editmode ? (
-          <View>
-            <Text>Edit Mode : Press date to add {modeliststr.name}</Text>
-          </View>
-        ) : (
-          <View>
-            <Text>  </Text>
-          </View>
-        )}
 
         <Notes
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           goEditMode={goEditMode}
-          editmode={editmode}
-          setEditMode={setEditMode}
           additionalstyle={{
             flex: 4,
-            width: "100%",
-            paddingRight: 2,
-            marginRight: 2,
+            width: "80%"
           }}
         />
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf:'flex-end',
+            justifyContent: 'center',
+            paddingBottom: 10
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              editmode
+                ? {
+                    ...styles.editbutton,
+                    width: 120,
+                    backgroundColor: "orange",
+                  }
+                : styles.editbutton,
+            ]}
+            onPress={() => {
+              if (editmode) {
+                saveNotes();
+              } else {
+                setModalVisible(true);
+              }
+            }}
+          >
+            <Text style={[editmode ? { fontSize: 30 } : { fontSize: 50 }]}>
+              {editmode ? "Done" : "+"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -98,23 +124,33 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "black",
     borderColor: "green",
-    borderWidth: 4,
-    borderRadius: 10,
+    // borderWidth: 4,
+    // borderRadius: 10,
+  },
+  editbutton: {
+    height: 60,
+    width: 80,
+    backgroundColor: "#FF89DE",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    // borderRightWidth:2,
+    // borderRightColor:'black'
   },
   mainview: {
     flex: 1,
-    marginTop: 20,
+    // marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    borderWidth: 2,
   },
   calendarcomp: {
     width: "100%",
-    borderWidth: 2,
+    // borderWidth: 2,
     backgroundColor: "#F7E5F2",
-    flex: 25,
-    padding: 10,
+    flex: 20,
+    // padding: 10,
     // height:500,
     justifyContent: "center",
     alignItems: "center",

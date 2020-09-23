@@ -1,75 +1,54 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity,  Button,AsyncStorage } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+  AsyncStorage,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import NoteText from "../UI/NoteText";
 import MedicineModal from "../UI/MedicineModal";
+import {
+  MonthName,
+  dateToCustomObject,
+  monthdaysinyear,
+  weekdaynames,
+  fullmonth,
+} from "../../definitions/HMCalendarUtils";
 
-const CurrentDayText = (props) => {
+const Notes = (props) => {
   const calendar = useSelector((state) => state.calendar);
-  
-  const saveNotes = async () => {
-    // console.log('huh',checkselected(daynotesarr))
-    const notes = JSON.stringify(calendar.calendarnotes);
-    try {
-      await AsyncStorage.setItem("CalendarNotes", notes);
-    } catch (err) {
-      console.log(err)
-    }
-    props.setEditMode(false)
+  const displaydate = (selected) => {
+    const [year, month, day] = selected.split("-");
+    const displaystr =
+      fullmonth[MonthName[parseInt(month) - 1]] + " " + day + ", " + year;
+    return displaystr;
   };
 
-  
   return (
     <View style={{ ...props.additionalstyle, ...styles.notescontainer }}>
       <MedicineModal
         modalVisible={props.modalVisible}
-        goEditMode = {props.goEditMode}
+        goEditMode={props.goEditMode}
         setModalVisible={props.setModalVisible}
       />
-      <Text style={{ fontSize: 20, textAlign: 'left', marginTop: 5 }}>
-        {calendar.selected}
+      <Text style={{ fontSize: 20, textAlign: "left", marginTop: 5 , textDecorationLine:'underline'}}>
+        {displaydate(calendar.selected)}
       </Text>
       <View style={styles.notescontentcontainer}>
-        <TouchableOpacity
-          onPress={() => {
-            props.setModalVisible(true);
-          }}
-        >
-          {calendar.selected in calendar.calendarnotes ? (
-            <NoteText
-              textarray={[
-                ...calendar.calendarnotes[calendar.selected],
-                "Edit Notes",
-              ]}
-            />
-          ) : (
-            <NoteText textarray={["Add Notes"]} />
-          )}
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          // backgroundColor: "blue",
-        }}
-      >
+        {calendar.calendarnotes[calendar.selected]?        <NoteText
+          textarray={[
+            ...calendar.calendarnotes[calendar.selected]
+          ]}
+        />: null
+          
+        }
 
-        <TouchableOpacity
-          style={[ props.editmode? {...styles.editbutton,width: 120, backgroundColor:'orange'}:styles.editbutton]}
-          onPress={() => {
-            if (props.editmode){
-              saveNotes()
-              
-
-            }else{
-              props.setModalVisible(true);
-            }
-          }}
-        >
-          <Text style={[props.editmode?{ fontSize: 30 }:{ fontSize: 50 }]}>{props.editmode?'Done':'+'}</Text>
-        </TouchableOpacity>
       </View>
+
+
       {/* <Button title='notes'  onPress={()=>{console.log(calendar.calendarnotes)}}/> */}
     </View>
   );
@@ -85,20 +64,10 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   notescontainer: {
-    margin: 10,
-    alignSelf: "flex-start",
+    // margin: 10,
+    // backgroundColor: "yellow",
   },
-  editbutton:{
-    height: 60,
-    width: 80,
-    backgroundColor: '#FF89DE',
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopLeftRadius:20,
-    borderBottomLeftRadius:20,
-    // borderRightWidth:2,
-    // borderRightColor:'black'
-  }
+  
 });
 
-export default CurrentDayText;
+export default Notes;

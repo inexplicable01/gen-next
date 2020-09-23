@@ -39,17 +39,34 @@ export const MonthName = [
   "Dec",
 ];
 
-export function monthdaysinyear(year) {
-  if (year % 4 ==0){
-    // console.log('here3')
-    return[31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  } else{
-    // console.log('here')
-    return[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  }
+export const fullmonth = {
+  "Jan": "January",
+  "Feb": "Feburary",
+  "Mar": "Wednesday",
+  "Apr":"April",
+  "May":"May",
+  "Jun":"June",
+  "Jul":"July",
+  "Aug":"August",
+  "Sep":"September",
+  "Oct":"October",
+  "Nov":"November",
+  "Dec":"December",
+}
 
-  
-} 
+
+
+export const weekdaynames = ["S", "M", "T", "W", "T", "F", "S"];
+
+export function monthdaysinyear(year) {
+  if (year % 4 == 0) {
+    // console.log('here3')
+    return [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  } else {
+    // console.log('here')
+    return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  }
+}
 
 export function dateToCustomObject(dateobj) {
   // console.log(dateobj.getTime())

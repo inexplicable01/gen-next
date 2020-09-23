@@ -7,7 +7,7 @@ const TableRow = (props) => {
 
   // console.log(props.fields)
   return (
-    <View style={styles.tablerow}>
+    <View style={{...styles.tablerow, ...props.rowstyle}}>
       <View style={styles.column1}>
         <Text style={props.header? {...styles.column1text, fontWeight:'bold'}:styles.column1text}> {props.entry}</Text>
       </View>
@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius:10,
-    borderWidth:2,
+    // borderWidth:2,
     padding:5,
+
     borderColor:'gainsboro'
   },
   column1: {

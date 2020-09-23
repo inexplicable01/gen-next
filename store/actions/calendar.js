@@ -6,7 +6,7 @@ export const INITIATE_CALENDAR = "INITIATE_CALENDAR";
 export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_EDITMODEICON = "SET_EDITMODEICON";
 export const ADD_ICON = "ADD_ICON";
-
+export const CURRENTCALENDARMONTH ="CURRENTCALENDARMONTH";
 
 
 export const setdate = (day) => {
@@ -69,9 +69,10 @@ export const setIcon = (modeliststr) => {
 };
 
 export const addIcon = (day) => {
-
-
-
-
   return { type: ADD_ICON, dateString: day.dateString};
 };
+
+export const currentcalendarmonth = (monthkey) => {
+  // console.log('got to here', monthkey)
+  return {type:CURRENTCALENDARMONTH, monthkey:monthkey}
+}

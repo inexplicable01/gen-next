@@ -55,7 +55,7 @@ export const notescaldefinition = {
     icon: "calendar-check",
   },
   Notes: {
-    dotdef: { key: "Notes", color: "indigo", selectedDotColor: "indigo" },
+    dotdef: { key: "Notes", color: "#F8D354", selectedDotColor: "indigo" },
     liststr: [
       { name: "Menses", icon: "emoji-sad", iconfamily: "Entypo" },
       { name: "Pain", icon: "emoji-sad", iconfamily: "Entypo" },
@@ -67,9 +67,12 @@ export const notescaldefinition = {
 
 export const findcolor = (word) => {
   for (const notice of Object.keys(notescaldefinition)) {
-    if (notescaldefinition[notice].liststr.includes(word)) {
-      return notescaldefinition[notice].dotdef.color;
+    for ( const list of notescaldefinition[notice].liststr){
+      if (list.name===word) {
+        return notescaldefinition[notice].dotdef.color;
+      }
     }
+
   }
   return "gainsboro";
 };
