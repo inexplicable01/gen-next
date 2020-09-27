@@ -79,9 +79,6 @@ export const findcolor = (word) => {
 
 export const iconsFromNotes = (wordArray) => {
   const iconsToChart = [];
-  if (wordArray.length===0){
-    return iconsToChart
-  }
   // console.log(wordArray)
   for (const notice of Object.keys(notescaldefinition)) {
     for (const liststr of notescaldefinition[notice].liststr) {

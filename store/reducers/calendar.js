@@ -3,9 +3,11 @@ import {
   DOT_DATES,
   INITIATE_CALENDAR,
   UPDATE_CALENDAR,
+  SETEDITMODE,
   SET_EDITMODEICON,
   ADD_ICON,
-  CURRENTCALENDARMONTH
+  CURRENTCALENDARMONTH,
+  setEditMode,
 } from "../actions/calendar";
 
 const curDate = new Date();
@@ -25,10 +27,12 @@ const curDate = new Date();
 const initialState = {
   currentdate: curDate.toDateString(),
   curdateobj: curDate,
+  todayobj: new Date(),
   selected: curDate.toISOString().split("T")[0],
   calendarnotes: {},
   modeliststr: null,
-  monthkey:null
+  monthkey: null,
+  editmode: false,
 };
 
 export default (state = initialState, action) => {
@@ -47,13 +51,51 @@ export default (state = initialState, action) => {
       // console.log('got to here', action.monthkey)
       return {
         ...state,
-        monthkey:action.monthkey
-      }
+        monthkey: action.monthkey,
+      };
     case SET_CURRENTDATE:
       // console.log(state.calendarnotes)
+      if (state.editmode) {
+        let newnotes;
+        // console.log('day.dateString', state.calendarnotes[action.dateString], state.modeliststr.name)
+        if (state.calendarnotes[action.dateString]) {
+          if (
+            state.calendarnotes[action.dateString].includes(
+              state.modeliststr.name
+            )
+          ) {
+            newnotes = state.calendarnotes[action.dateString].filter(
+              (note) => note !== state.modeliststr.name
+            );
+          } else {
+            newnotes = [
+              ...state.calendarnotes[action.dateString],
+              state.modeliststr.name,
+            ];
+          }
+        } else {
+          newnotes = [state.modeliststr.name];
+        }
+
+        return {
+          ...state,
+          selected: action.dateString,
+          calendarnotes: {
+            ...state.calendarnotes,
+            [action.dateString]: newnotes,
+          },
+        };
+      } else {
+        return {
+          ...state,
+          selected: action.dateString,
+        };
+      }
+
+    case SETEDITMODE:
       return {
         ...state,
-        selected: action.dateString,
+        editmode: action.editmode,
       };
     case DOT_DATES:
       if (action.date in state.markeddates) {
@@ -73,23 +115,34 @@ export default (state = initialState, action) => {
       };
 
     case ADD_ICON:
-      let newnotes
+      let newnotes;
       // console.log('day.dateString', state.calendarnotes[action.dateString], state.modeliststr.name)
-      if (state.calendarnotes[action.dateString]){
-        if (state.calendarnotes[action.dateString].includes(state.modeliststr.name)){
-          newnotes = state.calendarnotes[action.dateString].filter(note => note!==state.modeliststr.name)
+      if (state.calendarnotes[action.dateString]) {
+        if (
+          state.calendarnotes[action.dateString].includes(
+            state.modeliststr.name
+          )
+        ) {
+          newnotes = state.calendarnotes[action.dateString].filter(
+            (note) => note !== state.modeliststr.name
+          );
         } else {
-          newnotes = [...state.calendarnotes[action.dateString],state.modeliststr.name]
+          newnotes = [
+            ...state.calendarnotes[action.dateString],
+            state.modeliststr.name,
+          ];
         }
-        
-      } else{
-        newnotes = [state.modeliststr.name]
+      } else {
+        newnotes = [state.modeliststr.name];
       }
-      
+
       return {
         ...state,
         selected: action.dateString,
-        calendarnotes: { ...state.calendarnotes, [action.dateString]: newnotes },
+        calendarnotes: {
+          ...state.calendarnotes,
+          [action.dateString]: newnotes,
+        },
       };
   }
   return state;

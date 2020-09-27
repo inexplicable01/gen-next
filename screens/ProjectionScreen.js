@@ -1,41 +1,102 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Button
 } from "react-native";
 import Header from "../components/templates/Header";
 import { useSelector } from "react-redux";
 import TableRow from "../components/table/TableRow";
 import { projectionMatrix } from "../definitions/ProjectionUtils";
+import { useNavigation } from "@react-navigation/native";
+
+import SuperText from "../components/UI/SuperText";
 // import { Dropdown } from "react-native-material-dropdown";
 
 const ProjectionScreen = (props) => {
   const calendar = useSelector((state) => state.calendar);
   // const [schedule, setSchedule] = useState(null);
   const [schedule, setSchedule] = useState();
+  const [trig, setTrig] = useState(false)
+  const [boolstate, setBoolState] = useState({
+    Pregnancy: false,
+    Injection: false,
+    IMP: false,
+    Log: false,
+    Aevent: false,
+  });
+
+  const [tf, setTf] = useState({
+    Pregnancy: [0,0,0,0,0],
+    Injection: [0,0,0,0,0],
+    IMP: [0,0,0,0,0],
+    Log: [0,0,0,0,0],
+    Aevent: [0,0,0,0,0]
+  }
+
+  )
+  
   //   console.log(Object.entries(pregancy));
+  const navigation = useNavigation();
 
   const schedulePress = (schedule) => {
-    // console.log(schedule)
+    // console.log('wtf',schedule)
     setSchedule(schedule);
+    setBoolState((boolstate) => {
+      for (const key of Object.keys(boolstate)){
+        boolstate[key] = false
+        if (schedule===key){
+          boolstate[key] = true
+        }
+      }
+      return boolstate
+    });
   };
-  const gotoCalendar = ()=>console.log('Go to calendar')
+  const changeblah=()=>{
+    setTf(tf=>{
+      tf[schedule][1] = tf[schedule][1]+1
+      tf['Log'][1] = tf['Log'][1]+1
+      return tf
+    })
+    setTrig(trig=>!trig)
+
+  }
+  const gotoCalendar = () => {
+    navigation.navigate("Agenda");
+  };
+  // console.log("projection render", Date.now());
+  // console.log('wtf', tf[projecttype.item][1])
+  // console.log('boolstate',boolstate)
   return (
     <View style={styles.mainview}>
       <Header extrastyles={{ flex: 1 }} title={"Projection"} />
-      <View style={{ backgroundColor: "#FF89DE", width: "100%" , paddingTop:4}}>
+      <View
+        style={{ backgroundColor: "#FF89DE", width: "100%", paddingTop: 4 }}
+      >
         <Text style={styles.projecttext}>
-          Project from : <Text style={{color:'blue', textDecorationLine:'underline'}}  onPress={gotoCalendar}>{calendar.selected}</Text>
+          Project from :{" "}
+          <Text
+            style={{ color: "blue", textDecorationLine: "underline" }}
+            onPress={gotoCalendar}
+          >
+            {calendar.selected}
+          </Text>
         </Text>
+        {/* <Button title='ti' onPress={changeblah}/> */}
         <View style={{ width: "100%", borderRadius: 10 }}>
           <FlatList
             data={Object.keys(projectionMatrix)}
             keyExtractor={(item) => item}
             horizontal={true}
             renderItem={(projecttype, index, sep) => {
+              // const blue = [0, 0, 0, 0, schedule===projecttype.item, 1, 1 ,1]
+              const blue = schedule === projecttype.item;
+              // console.log(boolref.current)
+
+
               return (
                 <TouchableOpacity
                   onPress={schedulePress.bind(this, projecttype.item)}
@@ -45,11 +106,15 @@ const ProjectionScreen = (props) => {
                       : styles.projectionnbox
                   }
                 >
-                  <Text style={
-                    schedule == projecttype.item
-                      ? { color:'white'}
-                      : { color:'black' }
-                  }>{projecttype.item}</Text>
+                  <SuperText
+                    text={projecttype.item}
+                    blue={boolstate[projecttype.item]}
+                    deeper = {boolstate}
+                    tfitem = {tf[projecttype.item]}
+                    trigger={tf[projecttype.item][1]}
+                    // schedule = {schedule}
+                    index={projecttype.index}
+                  />
                 </TouchableOpacity>
               );
             }}
@@ -114,7 +179,7 @@ const styles = StyleSheet.create({
     width: "100%",
     // borderWidth: 2,
     // backgroundColor:'yellow',
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
     alignItems: "center",
     marginTop: 20,
     // borderWidth: 2,
@@ -132,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     // borderColor: "black",
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,

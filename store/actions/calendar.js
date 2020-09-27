@@ -5,6 +5,7 @@ export const DOT_DATES = "DOT_DATES";
 export const INITIATE_CALENDAR = "INITIATE_CALENDAR";
 export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_EDITMODEICON = "SET_EDITMODEICON";
+export const SETEDITMODE= "SETEDITMODE";
 export const ADD_ICON = "ADD_ICON";
 export const CURRENTCALENDARMONTH ="CURRENTCALENDARMONTH";
 
@@ -70,6 +71,10 @@ export const setIcon = (modeliststr) => {
 
 export const addIcon = (day) => {
   return { type: ADD_ICON, dateString: day.dateString};
+};
+
+export const setEditMode = (editmode) => {
+  return { type: SETEDITMODE, editmode: editmode};
 };
 
 export const currentcalendarmonth = (monthkey) => {

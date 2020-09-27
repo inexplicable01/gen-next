@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Animated,
   AsyncStorage,
+  Button
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -21,37 +22,22 @@ import InfiScrollCalendar from "../components/calendarutil/InfiScrollCalendar";
 
 const AgendaScreen = (props) => {
   const dispatch = useDispatch();
+  const [blah, setBlah ] = useState(true)
+  // const [editmode, setEditMode] = useState(false);
+  // const editmode = useRef(false)
 
-  const [editmode, setEditMode] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const {modeliststr,calendarnotes }= useSelector((state) => state.calendar);
 
-  const daypressed = (dateobj) => {
+  const {editmode, modeliststr,calendarnotes }= useSelector((state) => state.calendar);
+
+  const daypressed = useCallback((dateobj) => {
     // console.log(dateobj);
-    if (editmode) {
-      dispatch(calendarActions.addIcon(dateobj));
-    } else {
+    // if (editmode.current) {
+    //   dispatch(calendarActions.addIcon(dateobj));
+    // } else {
       dispatch(calendarActions.setdate(dateobj));
-    }
-  };
+  },[]);
 
-  const goEditMode = (modeliststr) => {
-    // console.log(modeliststr.name)
-    dispatch(calendarActions.setIcon(modeliststr));
-    setModalVisible(false);
-    setEditMode(true);
-  };
 
-  const saveNotes = async () => {
-    // console.log('huh',checkselected(daynotesarr))
-    const notes = JSON.stringify(calendarnotes);
-    try {
-      await AsyncStorage.setItem("CalendarNotes", notes);
-    } catch (err) {
-      console.log(err);
-    }
-    setEditMode(false);
-  };
 
   return (
     <View style={styles.mainview}>
@@ -59,7 +45,7 @@ const AgendaScreen = (props) => {
       <View style={styles.calendarcomp}>
         <InfiScrollCalendar
           onDayPressed={daypressed}
-          calendarstyle={{ flex: 8, width: "100%" }}
+          calendarstyle={{ flex: 18, width: "100%" }}
         />
 
         <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -71,45 +57,15 @@ const AgendaScreen = (props) => {
         </View>
 
         <Notes
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          goEditMode={goEditMode}
+          editmode = {editmode}
+          // setEditMode = {setEditMode}
           additionalstyle={{
-            flex: 4,
-            width: "80%"
+            flex: 6,
+            width: "100%"
           }}
         />
-        <View
-          style={{
-            flexDirection: "row",
-            alignSelf:'flex-end',
-            justifyContent: 'center',
-            paddingBottom: 10
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              editmode
-                ? {
-                    ...styles.editbutton,
-                    width: 120,
-                    backgroundColor: "orange",
-                  }
-                : styles.editbutton,
-            ]}
-            onPress={() => {
-              if (editmode) {
-                saveNotes();
-              } else {
-                setModalVisible(true);
-              }
-            }}
-          >
-            <Text style={[editmode ? { fontSize: 30 } : { fontSize: 50 }]}>
-              {editmode ? "Done" : "+"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* <Button title={blah? 'rerender':'rendered 2'} onPress={()=>{setBlah(blah=>!blah)}}/> */}
+        
       </View>
     </View>
   );
@@ -127,17 +83,7 @@ const styles = StyleSheet.create({
     // borderWidth: 4,
     // borderRadius: 10,
   },
-  editbutton: {
-    height: 60,
-    width: 80,
-    backgroundColor: "#FF89DE",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    // borderRightWidth:2,
-    // borderRightColor:'black'
-  },
+
   mainview: {
     flex: 1,
     // marginTop: 20,

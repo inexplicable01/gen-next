@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 const TableRow = (props) => {
 
-  // console.log(props.fields)
+  //console.log(props.fields)
   return (
     <View style={{...styles.tablerow, ...props.rowstyle}}>
       <View style={styles.column1}>

@@ -8,6 +8,8 @@ import {
   CheckBox,
   Button,
   FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as calendarActions from "../../store/actions/calendar";
@@ -48,24 +50,6 @@ const MedicineModal = (props) => {
     setDayNoteArr(checksinfo);
   }, [calendar.selected, props.modalVisible]);
 
- 
-
-  // const checkedchange = (notice, act) => {
-  //   setDayNoteArr({
-  //     ...daynotesarr,
-  //     [notice]: daynotesarr[notice].map((item) => {
-  //       if (item.liststr === act) {
-  //         return { ...item, checked: !item.checked };
-  //       } else {
-  //         return item;
-  //       }
-  //     }),
-  //   });
-  // };
-
-
-  //   console.log("day", daynotesarr);
-  //  console.log(noticeOrders)
   return (
     <Modal
       animationType="slide"
@@ -75,43 +59,54 @@ const MedicineModal = (props) => {
         Alert.alert("Modal has been closed.");
       }}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modaltext}>
-            Setting Notes for {calendar.selected}
-          </Text>
-          <FlatList
-            data={noticeOrders}
-            style={{
-              width: "100%",
-              borderRadius: 10,
-              padding: 5,
-            }}
-            renderItem={(notice) => {
-              // console.log(notescaldefinition[notice])
-              return (
-                <NoticeItem
-                  notice={notice.item}
-                  goEditMode = {props.goEditMode}
-                  liststr={notescaldefinition[notice.item].liststr}
-                  color={notescaldefinition[notice.item].dotdef.color}
-                />
-              );
-            }}
-            keyExtractor={(item) => item}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              width: "100%",
+      <TouchableWithoutFeedback
+        onPress={() => {
+          props.setModalVisible('false')
+        }}
+      >
+        <View style={styles.centeredView}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              console.log("donclose");
             }}
           >
-          </View>
+            <View style={styles.modalView}>
+              <Text style={styles.modaltext}>
+                Setting Notes for {calendar.selected}
+              </Text>
+              <FlatList
+                data={noticeOrders}
+                style={{
+                  width: "100%",
+                  borderRadius: 10,
+                  padding: 5,
+                }}
+                renderItem={(notice) => {
+                  // console.log(notescaldefinition[notice])
+                  return (
+                    <NoticeItem
+                      notice={notice.item}
+                      goEditMode={props.goEditMode}
+                      liststr={notescaldefinition[notice.item].liststr}
+                      color={notescaldefinition[notice.item].dotdef.color}
+                    />
+                  );
+                }}
+                keyExtractor={(item) => item}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              ></View>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
@@ -170,7 +165,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: "90%",
-    height: "50%",
+    // height: "50%",
   },
   checkboxContainer: {
     flex: 1,
