@@ -9,7 +9,7 @@ import ExpoIcon from "../../components/UI/ExpoIcon";
 
 const SuperSubText = (props) => {
   var weeks = [];
-  console.log('supersbub', props.text)
+  // console.log('supersbub', props.text)
   for (const yeah of props.tfitem) {
     // console.log(props.notesmonth['week' + iweek])
     weeks.push(

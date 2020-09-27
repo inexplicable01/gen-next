@@ -62,16 +62,10 @@ const InfiScrollCalendar = (props) => {
   }, []);
 
   const addPriorMonths = () => {
-    // console.log(nummonths)
+
     setRefreshing(true);
     setCalendarDates((cdates) => {
       const monthstoadd = getcalendarmonths("AddPrevious", cdates);
-      for (const monthele of monthstoadd) {
-        console.log("infi render", monthele.monthyear());
-        // for (const weeki of monthele.wkarr) {
-        //   console.log(weeki[0].dateString);
-        // }
-      }
       return [...monthstoadd, ...cdates];
     });
     setRefreshing(false);
@@ -80,14 +74,6 @@ const InfiScrollCalendar = (props) => {
   useEffect(() => {
 
     setRefreshing(true);
-    // console.log("got to here", calendardates[0].monthyear());
-
-    // for (const monthele of calendardates) {
-    //   console.log("infi render", monthele.monthyear());
-    //   // for (const weeki of monthele.wkarr) {
-    //   //   console.log(weeki[0].dateString);
-    //   // }
-    // }
     setNotes(initiatesnotes(calendarnotes, calendardates));
     setSelectedArray(initiatesSelected(selected, calendardates));
     setRefreshing(false);
@@ -112,12 +98,12 @@ const InfiScrollCalendar = (props) => {
         key.current = viewableItems[0].key;
       }
     } catch (err) {
-      console.log("catch");
+      // console.log("catch");
     }
   }, []);
 
   useEffect(() => {
-    console.log("triggered by calendar");
+    // console.log("triggered by calendar");
     for (const [monthyear, weeks] of Object.entries(notes)) {
       for (const [weeki, day] of Object.entries(weeks)) {
         for (const [daystring, dayarray] of Object.entries(day)) {
@@ -151,12 +137,11 @@ const InfiScrollCalendar = (props) => {
   //
 
   useEffect(() => {
-    console.log("triggered by selected", selected);
+    // console.log("triggered by selected", selected);
     for (const [monthyear, weeks] of Object.entries(selectedArray)) {
       for (const [weeki, days] of Object.entries(weeks)) {
         for (const [daystring, selectedbool] of Object.entries(days)) {
           if (selectedbool) {
-            // console.log('here1')
             setSelectedArray((selectedArray) => {
               selectedArray[monthyear] = {
                 ...selectedArray[monthyear],

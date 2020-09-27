@@ -51,7 +51,7 @@ const MonthComp = React.memo((props) => {
     };
   };
 
-  console.log("notesmonth", props.monthyear);
+  // console.log("notesmonth", props.monthyear);
   // console.log('refCalendardates',props.refCalendardates)
   return (
     <View onLayout={monthnamelayout} style={styles.monthview}>

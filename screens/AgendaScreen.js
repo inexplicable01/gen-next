@@ -30,10 +30,6 @@ const AgendaScreen = (props) => {
   const {editmode, modeliststr,calendarnotes }= useSelector((state) => state.calendar);
 
   const daypressed = useCallback((dateobj) => {
-    // console.log(dateobj);
-    // if (editmode.current) {
-    //   dispatch(calendarActions.addIcon(dateobj));
-    // } else {
       dispatch(calendarActions.setdate(dateobj));
   },[]);
 
@@ -64,8 +60,6 @@ const AgendaScreen = (props) => {
             width: "100%"
           }}
         />
-        {/* <Button title={blah? 'rerender':'rendered 2'} onPress={()=>{setBlah(blah=>!blah)}}/> */}
-        
       </View>
     </View>
   );

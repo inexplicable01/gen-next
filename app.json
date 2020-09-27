@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "gen-next",
-    "slug": "gen-next",
-    "version": "1.0.0",
+    "name": "OvaryIQ",
+    "slug": "OvaryIQ",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/gnf_logo.png",
     "splash": {
@@ -19,9 +19,13 @@
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "package": "com.luktech.ovaryiq",
+      "versionCode": 2
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "Ovary IQ App for Fertility Center help"
   }
 }
