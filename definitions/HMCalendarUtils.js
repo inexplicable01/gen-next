@@ -79,3 +79,10 @@ export function dateToCustomObject(dateobj) {
     year: dateobj.getFullYear(),
   };
 }
+
+
+export function monthdate(dateobj) {
+  // console.log(dateobj.getTime())
+  return MonthName[dateobj.getMonth()] + ' ' +dateobj.getDate()
+
+}

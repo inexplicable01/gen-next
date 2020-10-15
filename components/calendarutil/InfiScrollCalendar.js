@@ -30,7 +30,6 @@ const InfiScrollCalendar = (props) => {
   const daysize = useRef({ height: 50, width: 350, x: 38, y: 0 });
   const key = useRef();
   const selecteddate = useRef();
-  const updown = useRef("down");
   const [calendardates, setCalendarDates] = useState(
     getcalendarmonths("Initiate")
   ); //3months forward and 3 months back
@@ -72,7 +71,6 @@ const InfiScrollCalendar = (props) => {
   };
 
   useEffect(() => {
-
     setRefreshing(true);
     setNotes(initiatesnotes(calendarnotes, calendardates));
     setSelectedArray(initiatesSelected(selected, calendardates));
@@ -171,13 +169,7 @@ const InfiScrollCalendar = (props) => {
     }
     setTrig2((trig) => !trig);
   }, [selected]);
-  // for (const monthele of calendardates){
-  //   console.log('infi render', monthele.monthyear())
-  //   for (const weeki of monthele.wkarr){
-  //     console.log(weeki[0].dateString)
-  //   }
 
-  // }
   return (
     <View
       style={{ ...props.calendarstyle, backgroundColor: "#FF89DE" }}
@@ -395,14 +387,8 @@ const getcalendarmonths = (mode, cdates) => {
     const earlymonth = new Date(
       firstdaycustomobj.timestamp - nummonths * 30 * 24 * 60 * 60 * 1000
     );
-    earlyday = new Date(
-      earlymonth.getFullYear(),
-      earlymonth.getMonth(),
-      1,
-      12,
-      0,
-      0
-    );
+    earlyday = new Date(earlymonth.getFullYear(), earlymonth.getMonth(),      1,
+      12,      0,      0    );
     lastday = new Date(firstdaycustomobj.timestamp - 24 * 60 * 60 * 1000);
   }
   // ====================================================
@@ -415,11 +401,8 @@ const getcalendarmonths = (mode, cdates) => {
   }
 
   let curday = new Date(firstsundaytime);
-  // curday is the first Sunday
-  // earlyday indicates the first of the month so month and year can be extracted
   let curMonth = earlyday.getMonth();
   let curYear = earlyday.getFullYear();
-
   let newmonth = true;
   const monthstoadd = [];
 

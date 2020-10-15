@@ -5,13 +5,15 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Button
+  Button,
 } from "react-native";
 import Header from "../components/templates/Header";
 import { useSelector } from "react-redux";
 import TableRow from "../components/table/TableRow";
 import { projectionMatrix } from "../definitions/ProjectionUtils";
 import { useNavigation } from "@react-navigation/native";
+import ProjectionTable from "../components/projection/ProjectionTable";
+import ProjectionTitle from "../components/projection/ProjectionTitle";
 
 import SuperText from "../components/UI/SuperText";
 // import { Dropdown } from "react-native-material-dropdown";
@@ -19,8 +21,7 @@ import SuperText from "../components/UI/SuperText";
 const ProjectionScreen = (props) => {
   const calendar = useSelector((state) => state.calendar);
   // const [schedule, setSchedule] = useState(null);
-  const [schedule, setSchedule] = useState();
-  const [trig, setTrig] = useState(false)
+  const [schedule, setSchedule] = useState("Cycle");
   const [boolstate, setBoolState] = useState({
     Pregnancy: false,
     Injection: false,
@@ -29,16 +30,6 @@ const ProjectionScreen = (props) => {
     Aevent: false,
   });
 
-  const [tf, setTf] = useState({
-    Pregnancy: [0,0,0,0,0],
-    Injection: [0,0,0,0,0],
-    IMP: [0,0,0,0,0],
-    Log: [0,0,0,0,0],
-    Aevent: [0,0,0,0,0]
-  }
-
-  )
-  
   //   console.log(Object.entries(pregancy));
   const navigation = useNavigation();
 
@@ -46,24 +37,16 @@ const ProjectionScreen = (props) => {
     // console.log('wtf',schedule)
     setSchedule(schedule);
     setBoolState((boolstate) => {
-      for (const key of Object.keys(boolstate)){
-        boolstate[key] = false
-        if (schedule===key){
-          boolstate[key] = true
+      for (const key of Object.keys(boolstate)) {
+        boolstate[key] = false;
+        if (schedule === key) {
+          boolstate[key] = true;
         }
       }
-      return boolstate
+      return boolstate;
     });
   };
-  const changeblah=()=>{
-    setTf(tf=>{
-      tf[schedule][1] = tf[schedule][1]+1
-      tf['Log'][1] = tf['Log'][1]+1
-      return tf
-    })
-    setTrig(trig=>!trig)
 
-  }
   const gotoCalendar = () => {
     navigation.navigate("Agenda");
   };
@@ -72,88 +55,69 @@ const ProjectionScreen = (props) => {
   // console.log('boolstate',boolstate)
   return (
     <View style={styles.mainview}>
-      <Header extrastyles={{ flex: 1 }} title={"Projection"} />
-      <View
-        style={{ backgroundColor: "#FF89DE", width: "100%", paddingTop: 4 }}
-      >
-        <Text style={styles.projecttext}>
-          Project from :{" "}
-          <Text
-            style={{ color: "blue", textDecorationLine: "underline" }}
-            onPress={gotoCalendar}
-          >
-            {calendar.selected}
+      <Header extrastyles={{ flex: 2 }} title={"Projection"} />
+      <View style={styles.calendarcomp}>
+        <View
+          style={{ backgroundColor: "#FF89DE", width: "100%", paddingTop: 4 }}
+        >
+          <Text style={styles.projecttext}>
+            Project from :{" "}
+            <Text
+              style={{ color: "blue", textDecorationLine: "underline" }}
+              onPress={gotoCalendar}
+            >
+              {calendar.selected}
+            </Text>
           </Text>
-        </Text>
-        {/* <Button title='ti' onPress={changeblah}/> */}
-        <View style={{ width: "100%", borderRadius: 10 }}>
-          <FlatList
-            data={Object.keys(projectionMatrix)}
-            keyExtractor={(item) => item}
-            horizontal={true}
-            renderItem={(projecttype, index, sep) => {
-              // const blue = [0, 0, 0, 0, schedule===projecttype.item, 1, 1 ,1]
-              const blue = schedule === projecttype.item;
-              // console.log(boolref.current)
-
-
-              return (
-                <TouchableOpacity
-                  onPress={schedulePress.bind(this, projecttype.item)}
-                  style={
-                    schedule == projecttype.item
-                      ? { ...styles.projectionnbox, backgroundColor: "#547DEB" }
-                      : styles.projectionnbox
-                  }
-                >
-                  <SuperText
-                    text={projecttype.item}
-                    blue={boolstate[projecttype.item]}
-                    deeper = {boolstate}
-                    tfitem = {tf[projecttype.item]}
-                    trigger={tf[projecttype.item][1]}
-                    // schedule = {schedule}
-                    index={projecttype.index}
-                  />
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
-        <TableRow entry={"Event"} fields={"Projection Date"} header={true} />
-      </View>
-      <View style={styles.dataview}>
-        {schedule ? (
-          <View style={styles.projecttable}>
+          {/* <Button title='ti' onPress={changeblah}/> */}
+          <View style={{ width: "100%", borderRadius: 10 }}>
             <FlatList
-              data={Object.keys(projectionMatrix[schedule])}
-              keyExtractor={(item, index) => "" + index}
-              renderItem={({ item }) => (
-                <TableRow
-                  entry={projectionMatrix[schedule][item].label}
-                  fields={addDays(
-                    projectionMatrix[schedule][item].days,
-                    calendar.curdateobj
-                  )}
-                  rowstyle={{ borderBottomWidth: 8 }}
-                />
-              )}
-              style={{ width: "100%" }}
+              data={Object.keys(projectionMatrix)}
+              keyExtractor={(item) => item}
+              horizontal={true}
+              renderItem={(projecttype, index, sep) => {
+                // const blue = [0, 0, 0, 0, schedule===projecttype.item, 1, 1 ,1]
+                const blue = schedule === projecttype.item;
+                return (
+                  <TouchableOpacity
+                    onPress={schedulePress.bind(this, projecttype.item)}
+                    style={
+                      schedule == projecttype.item
+                        ? {
+                            ...styles.projectionnbox,
+                            backgroundColor: "#547DEB",
+                          }
+                        : styles.projectionnbox
+                    }
+                  >
+                    <SuperText
+                      text={projecttype.item}
+                      schedule={schedule}
+                      deeper={boolstate}
+                      // schedule = {schedule}
+                      index={projecttype.index}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
             />
           </View>
-        ) : (
-          <Text> Select a type of Projection</Text>
-        )}
+          <ProjectionTitle schedule={schedule} />
+        </View>
+        <View style={styles.dataview}>
+            {schedule ? (
+              <ProjectionTable
+                schedule={schedule}
+                curdateobj={calendar.curdateobj}
+                calendarnotes={calendar.calendarnotes}
+              />
+            ) : (
+              <Text> Select a type of Projection</Text>
+            )}
+        </View>
       </View>
     </View>
   );
-};
-
-const addDays = (days, dateobj) => {
-  const newtime = dateobj.getTime() + 60 * 60 * 24 * 1000 * days;
-  const newdateobj = new Date(newtime);
-
-  return newdateobj.toDateString();
 };
 
 const styles = StyleSheet.create({
@@ -166,7 +130,7 @@ const styles = StyleSheet.create({
   },
   mainview: {
     flex: 1,
-    marginTop: 20,
+    // marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -184,14 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     // borderWidth: 2,
   },
-  projecttable: {
-    width: "100%",
-    alignItems: "flex-start",
-    // backgroundColor: "yellow",
-    borderRadius: 10,
-    // borderWidth:2,
-    padding: 5,
-  },
+
   projectionnbox: {
     backgroundColor: "white",
     padding: 10,
@@ -205,6 +162,16 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 60,
     width: 120,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  calendarcomp: {
+    width: "100%",
+    // borderWidth: 2,
+    backgroundColor: "#F7E5F2",
+    flex: 20,
+    // padding: 10,
+    // height:500,
     justifyContent: "center",
     alignItems: "center",
   },

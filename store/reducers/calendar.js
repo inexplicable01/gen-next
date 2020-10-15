@@ -10,24 +10,15 @@ import {
   setEditMode,
 } from "../actions/calendar";
 
+import {IUISex, D3, D5} from "../../definitions/Notices";
+
 const curDate = new Date();
 
-// const activity = { key: "activity", color: "red", selectedDotColor: "red" };
-// const drugs = { key: "drugs", color: "blue", selectedDotColor: "blue" };
-// const appointment = {
-//   key: "appointment",
-//   color: "green",
-//   selectedDotColor: "green",
-// };
-
-//
-// dateString is curDate.toISOString().split("T")[0]
-// calendarnotes[dateString] = ['wordsinliststr']
 
 const initialState = {
-  currentdate: curDate.toDateString(),
   curdateobj: curDate,
   todayobj: new Date(),
+  // selected: curDate.getFullYear(),
   selected: curDate.toISOString().split("T")[0],
   calendarnotes: {},
   modeliststr: null,
@@ -59,11 +50,7 @@ export default (state = initialState, action) => {
         let newnotes;
         // console.log('day.dateString', state.calendarnotes[action.dateString], state.modeliststr.name)
         if (state.calendarnotes[action.dateString]) {
-          if (
-            state.calendarnotes[action.dateString].includes(
-              state.modeliststr.name
-            )
-          ) {
+          if ( state.calendarnotes[action.dateString].includes(state.modeliststr.name)) {
             newnotes = state.calendarnotes[action.dateString].filter(
               (note) => note !== state.modeliststr.name
             );
@@ -75,6 +62,10 @@ export default (state = initialState, action) => {
           }
         } else {
           newnotes = [state.modeliststr.name];
+        }
+        
+        if (state.modeliststr.name===IUISex){
+          console.log(action.dateString)
         }
 
         return {

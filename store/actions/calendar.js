@@ -20,18 +20,6 @@ export const dotdate = (day) => {
   return { type: DOT_DATES, date: day.dateString };
 };
 
-// export const savecalendar = () => {
-//   return async (dispatch, getState) => {
- 
-
-//     // console.log('saved', calendarnotes)
-//     dispatch({
-//         type: UPDATE_CALENDAR,
-//         calendarnotes: calendarnotes,
-//       });
-//   };
-// };
-
 export const loadcalendar = () => {};
 
 export const initiatecalendar = () => {

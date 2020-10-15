@@ -1,3 +1,8 @@
+export const IUISex="IUI/Sex";
+export const D3="D3 Embryo Transfer";
+export const D5="D5 Embryo Transfer";
+export const PERIOD="Period";
+
 export const notescaldefinition = {
   // a list of different types of notices
   Medication: {
@@ -28,8 +33,9 @@ export const notescaldefinition = {
       selectedDotColor: "darkorange",
     },
     liststr: [
-      { name: "Sex", icon: "heart", iconfamily: "AntDesign" },
-      { name: "Preg Test", icon: "test-bottle", iconfamily: "Fontisto" },
+      { name: IUISex, icon: "heart", iconfamily: "AntDesign" },
+      { name: D3, icon: "dice-three", iconfamily: "FontAwesome5" },
+      { name: D5, icon: "dice-five", iconfamily: "FontAwesome5" },
     ],
     vieworder: 2,
     icon: "pills",
@@ -55,10 +61,11 @@ export const notescaldefinition = {
     icon: "calendar-check",
   },
   Notes: {
-    dotdef: { key: "Notes", color: "#F8D354", selectedDotColor: "indigo" },
+    dotdef: { key: "Notes", color: "crimson", selectedDotColor: "pink" },
     liststr: [
-      { name: "Menses", icon: "emoji-sad", iconfamily: "Entypo" },
+      { name: PERIOD, icon: "blood-drop", iconfamily: "Fontisto" },
       { name: "Pain", icon: "emoji-sad", iconfamily: "Entypo" },
+      // { name: "", icon: "emoji-sad", iconfamily: "Entypo" },
     ],
     vieworder: 4,
     icon: "calendar-check",

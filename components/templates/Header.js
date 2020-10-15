@@ -21,7 +21,7 @@ const Header = (props) => {
       </View>
       <View style={styles.rightheader}>
         {/* <Text style={{textAlign:'right'}}>right</Text> */}
-        <Icon name="star" size={24} />
+        {/* <Icon name="star" size={24} /> */}
       </View>
     </View>
   );

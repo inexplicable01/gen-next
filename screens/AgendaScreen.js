@@ -1,12 +1,8 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState,  useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  Animated,
-  AsyncStorage,
-  Button
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -22,12 +18,8 @@ import InfiScrollCalendar from "../components/calendarutil/InfiScrollCalendar";
 
 const AgendaScreen = (props) => {
   const dispatch = useDispatch();
-  const [blah, setBlah ] = useState(true)
-  // const [editmode, setEditMode] = useState(false);
-  // const editmode = useRef(false)
 
-
-  const {editmode, modeliststr,calendarnotes }= useSelector((state) => state.calendar);
+  const {editmode, modeliststr }= useSelector((state) => state.calendar);
 
   const daypressed = useCallback((dateobj) => {
       dispatch(calendarActions.setdate(dateobj));

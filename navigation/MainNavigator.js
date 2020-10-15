@@ -6,9 +6,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProjectionScreen from "../screens/ProjectionScreen";
 // import CalendarScreen from "../screens/CalendarScreen";
 import AgendaScreen from "../screens/AgendaScreen";
+import CycleScreen from "../screens/CycleScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
-
+import { MaterialIcons , Octicons} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,13 +28,23 @@ export default function App() {
             ),
           }}
         />
+                {/* <Tab.Screen
+          name="Cycle"
+          component={CycleScreen}
+          options={{
+            tabBarLabel: "Your Cycle",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="perm-contact-calendar" size={size} color={color} />
+            ),
+          }}
+        /> */}
         <Tab.Screen
           name="Projections"
           component={ProjectionScreen}
           options={{
             tabBarLabel: "Projections",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="address-book" color={color} size={size} />
+              <Octicons name="project" color={color} size={size}/>
             ),
           }}
         />

@@ -18,20 +18,18 @@ const NoticeItem = (props) => {
 
   return (
     <View style={styles.categorybox}>
-      <View style={styles.CategoryTitleView}>
+      <TouchableOpacity style={styles.CategoryTitleView} onPress={() => toggleExpand()}>
         <Text style={styles.CategoryText}>{props.notice}</Text>
 
         <View style={{ paddingRight: 10, alignSelf: "center" }}>
-          <TouchableOpacity style={styles.row} onPress={() => toggleExpand()}>
             <ExpoIcon
               name={isExpand ? "downcircleo" : "upcircleo"}
               iconstyle={styles.DisplayerArrow}
               iconfamily="AntDesign"
               size={20}
             />
-          </TouchableOpacity>
-        </View>
       </View>
+      </TouchableOpacity>
       {isExpand && (
         <FlatList
           data={props.liststr}
