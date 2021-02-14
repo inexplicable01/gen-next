@@ -1,6 +1,6 @@
 import React from 'react';
 import {View,Text, StyleSheet} from 'react-native';
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import { Calendar} from "react-native-calendars";
 import {useDispatch} from "react-redux";
 import * as calendarActions from '../../store/actions/calendar';
 import { useSelector } from "react-redux";

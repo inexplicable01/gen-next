@@ -1,13 +1,36 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Text, Button } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  Button,
+  AsyncStorage,
+} from "react-native";
 
 import TableRow from "../../components/table/TableRow";
 import TablePeriodRow from "../../components/table/TablePeriodRow";
 import { projectionMatrix } from "../../definitions/ProjectionUtils";
-import { PERIOD } from "../../definitions/Notices";
+import { useNavigation } from "@react-navigation/native";
+import * as calendarActions from "../../store/actions/calendar";
 import { MonthName, monthdate } from "../../definitions/HMCalendarUtils";
+import Toast from "react-native-simple-toast";
+import { IUISex, D3, D5, PERIOD } from "../../definitions/Notices";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProjectionTable = (props) => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const { sumcycle, ave_cycle, startendovutime } = useSelector(
+    (state) => state.personal
+  );
+
+  const markDates = async () => {
+    dispatch(calendarActions.markdates(startendovutime, IUISex));
+    navigation.navigate("Calendar");
+    Toast.show("Filled in suggested days");
+  };
+
   if (props.schedule == "Pregnancy") {
     return (
       <FlatList
@@ -28,36 +51,67 @@ const ProjectionTable = (props) => {
     );
   }
   if (props.schedule == "Cycle") {
-    const hercycle = {};
-    for (const [date, note] of Object.entries(props.calendarnotes)) {
-      if (note.includes(PERIOD)) {
-        hercycle[date] = PERIOD;
-      }
-    }
-    if (Object.keys(hercycle).length > 0) {
-      const sumcycle = processPeriodData(hercycle);
+    if (Object.keys(sumcycle).length > 0) {
+      // console.log('sume',sumcycle)
       return (
         <View style={styles.dataview}>
-          <FlatList
-            data={Object.keys(sumcycle)}
-            keyExtractor={(item, index) => "" + index}
-            renderItem={({ item }) => (
-              <TablePeriodRow
-                monthyear={item}
-                monthdaycount={sumcycle[item]["count"]}
-                monthstartend={
-                  monthdate(sumcycle[item]["periodstartdate"]) +
-                  " - " +
-                  monthdate(sumcycle[item]["periodenddate"])
-                }
-              />
-            )}
-            style={{ width: "100%" }}
-          />
-          <View>
-            <Text> Sex dates</Text>
-            <Button title='Populate dates on calendar'/>
+          <View
+            style={{
+              flex: 8,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <FlatList
+              data={Object.keys(sumcycle)}
+              keyExtractor={(item, index) => "" + index}
+              renderItem={({ item }) => (
+                <TablePeriodRow
+                  monthyear={item}
+                  monthdaycount={sumcycle[item]["count"]}
+                  monthstartend={
+                    monthdate(sumcycle[item]["periodstartdate"]) +
+                    " - " +
+                    monthdate(sumcycle[item]["periodenddate"])
+                  }
+                />
+              )}
+              style={{ width: "100%" }}
+            />
           </View>
+
+          { (ave_cycle) ? (
+            <View
+              style={{
+                justifyContent: "space-evenly",
+                alignContent: "center",
+                // backgroundColor: "blue",
+                flex: 4,
+              }}
+            >
+              <Text style={styles.text}>
+                Your average cycle is {ave_cycle} days
+              </Text>
+              <Text style={styles.text}>
+                Your next ovu days are from {MM_DD_fromtime(startendovutime[0])}{" "}
+                to {MM_DD_fromtime(startendovutime[startendovutime.length - 1])}
+              </Text>
+              <Button title="Mark dates on calendar" onPress={markDates} />
+            </View>
+          ) : (
+            <View
+              style={{
+                justifyContent: "space-evenly",
+                alignContent: "center",
+                // backgroundColor: "blue",
+                flex: 4,
+              }}
+            >
+              <Text> Not enough data to make projections yet. </Text>
+              <Text>Please enter more cycle data. </Text>
+            </View>
+          )}
         </View>
       );
     }
@@ -65,41 +119,14 @@ const ProjectionTable = (props) => {
   }
 };
 
-const processPeriodData = (hercycle) => {
-  // reorder
-  const sumcycle = {};
-  const dates = [...Object.keys(hercycle)].sort();
-  const [yr, mn, day] = dates[0].split("-");
-  // periodstartdate
-  let periodstartdate = new Date(1900, parseInt(mn) - 1, day, 12, 0, 0);
-  let monthyear;
-  for (const date of dates) {
-    const [yr, mn, day] = date.split("-");
-    const curdate = new Date(yr, parseInt(mn) - 1, day, 12, 0, 0);
-
-    const dayssinceperiodstartday =
-      (curdate.getTime() - periodstartdate.getTime()) / 1000 / 3600 / 24;
-    if (dayssinceperiodstartday < 14) {
-      sumcycle[monthyear]["count"] = sumcycle[monthyear]["count"] + 1;
-      sumcycle[monthyear] = { ...sumcycle[monthyear], periodenddate: curdate };
-    } else {
-      monthyear = MonthName[curdate.getMonth()] + " " + curdate.getFullYear();
-      if (monthyear in sumcycle) {
-        monthyear = monthyear + "_2";
-      }
-      periodstartdate = new Date(yr, parseInt(mn) - 1, day, 12, 0, 0);
-      sumcycle[monthyear] = { count: 1, periodstartdate: periodstartdate };
-    }
-  }
-
-  // console.log(sumcycle)
-  return sumcycle;
+const MM_DD_fromtime = (timestamp) => {
+  const dateobj = new Date(timestamp);
+  return MonthName[dateobj.getMonth()] + " " + dateobj.getDate();
 };
 
 const addDays = (days, dateobj) => {
   const newtime = dateobj.getTime() + 60 * 60 * 24 * 1000 * days;
   const newdateobj = new Date(newtime);
-
   return newdateobj.toDateString();
 };
 
@@ -111,24 +138,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: "center",
   },
-  mainview: {
-    flex: 1,
-    marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    // borderWidth: 2,
-  },
   dataview: {
     flex: 12,
-    marginTop: 20,
+    // marginTop: 20,
     alignItems: "center",
     width: "100%",
     // borderWidth: 2,
-    // backgroundColor:'yellow',
-    justifyContent: "flex-start",
+    // backgroundColor: "yellow",
+    justifyContent: "space-around",
     alignItems: "center",
-    marginTop: 20,
+    // marginTop: 20,
     // borderWidth: 2,
   },
   projecttable: {

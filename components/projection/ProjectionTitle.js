@@ -13,7 +13,7 @@ const ProjectionTitle = (props) => {
 
   }
   if (props.schedule == "Cycle") {
-return <TablePeriodRow monthyear={"Cycle Month"} monthdaycount={'Count'} monthstartend={'Period Days'} header={true} />
+return <TablePeriodRow monthyear={"Cycle Month"} monthdaycount={'Duration'} monthstartend={'Date'} header={true} />
   }
 return <View  />
               

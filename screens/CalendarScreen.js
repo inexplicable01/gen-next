@@ -1,4 +1,4 @@
-import React, { useState,  useCallback } from "react";
+import React, {useCallback } from "react";
 import {
   View,
   Text,
@@ -7,25 +7,18 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import Header from "../components/templates/Header";
-// import { FlatList } from "react-native-gesture-handler";
 import Notes from "../components/UI/Notes";
-
-// import { MonthName, dateToCustomObject } from "../definitions/HMCalendarUtils";
-
 import * as calendarActions from "../store/actions/calendar";
 import InfiScrollCalendar from "../components/calendarutil/InfiScrollCalendar";
 
 
-const AgendaScreen = (props) => {
+const CalendarScreen = (props) => {
   const dispatch = useDispatch();
-
   const {editmode, modeliststr }= useSelector((state) => state.calendar);
-
   const daypressed = useCallback((dateobj) => {
+    console.log(calendarActions.setdate(dateobj))
       dispatch(calendarActions.setdate(dateobj));
   },[]);
-
-
 
   return (
     <View style={styles.mainview}>
@@ -95,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AgendaScreen;
+export default CalendarScreen;

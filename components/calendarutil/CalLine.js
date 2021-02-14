@@ -1,11 +1,6 @@
 import React, { useRef, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useSelector } from "react-redux";
-import { notescaldefinition } from "../../definitions/Notices";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import { iconsFromNotes } from "../../definitions/Notices";
-import ExpoIcon from "../../components/UI/ExpoIcon";
 import { MonthName, fullmonth } from "../../definitions/HMCalendarUtils";
 import Day from "../../components/calendarutil/Day";
 const isThisMonth = (monthkey, compyear, compmonth) => {
@@ -19,20 +14,13 @@ const isThisMonth = (monthkey, compyear, compmonth) => {
 };
 
 const CalLine = (props) => {
-
   const todayobj = useSelector(state=>state.calendar.todayobj)
-
   var day = [];
-
   const oddweek = Math.abs(Math.round((todayobj.getTime() - props.daysnumbers[0].timestamp)/1000/60/60/24/7)%2)
-
-  // console.log(props.monthyear, props.weeki, oddweek)
-
   for (let i = 0; i < props.daysnumbers.length; i++) {
     const [yearstr, monthnum, daystr] = props.daysnumbers[i].dateString.split(
       "-"
     );
-    // console.log(props.daysnumbers[i].dateString,props.notesweek[props.daysnumbers[i].dateString])
     const thismonth = isThisMonth(
       props.monthkey,
       yearstr,
@@ -43,7 +31,6 @@ const CalLine = (props) => {
         key={i}
         todaytf = {props.selectedArrayweek[props.daysnumbers[i].dateString]}
         daynumber={props.daysnumbers[i]}
-        // selecteddate = {props.selecteddate[props.daysnumbers[i].dateString]}
         thismonth={thismonth}
         onDayPressed={props.onDayPressed}
         notes={props.notesweek[props.daysnumbers[i].dateString]}

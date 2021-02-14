@@ -26,8 +26,6 @@ const layoutofdays = (daysize, event) => {
 };
 
 const MonthComp = React.memo((props) => {
-  // const height = useRef(0);
-  // console.log('moth', props.monthname, 'rendered')
   const [heightstate, setHeightState] = useState(0);
   const thismonth = isThisMonth(props.monthkey, props.year, props.monthname);
 
@@ -51,8 +49,6 @@ const MonthComp = React.memo((props) => {
     };
   };
 
-  // console.log("notesmonth", props.monthyear);
-  // console.log('refCalendardates',props.refCalendardates)
   return (
     <View onLayout={monthnamelayout} style={styles.monthview}>
       <View style={thismonth ? { ...styles.sidewayview } : styles.sidewayview}>
@@ -86,13 +82,8 @@ const MonthComp = React.memo((props) => {
               weeki={"week" + iweek}
               // selecteddate={props.selecteddate}
               monthyear={props.monthyear}
-  
-              // selectedArrayweek = {props.selectedArray["week" + iweek]?props.selectedArray["week" + iweek]:[false,false,false,false,false,false,false]}
               selectedArrayweek = {props.selectedArray?props.selectedArray["week" + iweek]
                 :[false,false,false,false,false,false,false]}
-       
-              // refCalendardates = {props.refCalendardates}
-              // notesweek={props.notesmonth["week" + iweek]}
               notesweek={props.notesmonth?props.notesmonth["week" + iweek]:[[],[],[],[],[],[],[]]}
             />
           ))}

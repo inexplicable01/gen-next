@@ -6,7 +6,7 @@ import {  findcolor } from "../../definitions/Notices";
 
 const NoteText = (props) => {
   const textarray = [];
-    // console.log('textarray', props.textarray)
+ console.log('textarray', props.textarray)
   for (const word of props.textarray) {
     textarray.push(
       <View

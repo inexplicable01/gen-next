@@ -1,3 +1,5 @@
+//Notices component is used for creating the icons and words in the Notes component
+
 export const IUISex="IUI/Sex";
 export const D3="D3 Embryo Transfer";
 export const D5="D5 Embryo Transfer";

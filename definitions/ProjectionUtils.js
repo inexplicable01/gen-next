@@ -1,3 +1,5 @@
+//Projection Screen uses this component to set the different types of projections sexpected for the projection page.
+
 export const projectionMatrix={
   Cycle: {
     pregancytest: { days: 25, label: "IMP adsfffft" },

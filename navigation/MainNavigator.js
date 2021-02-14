@@ -1,15 +1,11 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import ProjectionScreen from "../screens/ProjectionScreen";
-// import CalendarScreen from "../screens/CalendarScreen";
-import AgendaScreen from "../screens/AgendaScreen";
-import CycleScreen from "../screens/CycleScreen";
+import CalendarScreen from "../screens/CalendarScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { MaterialIcons , Octicons} from '@expo/vector-icons';
+import {Octicons} from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +15,8 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
-          name="Agenda"
-          component={AgendaScreen}
+          name="Calendar"
+          component={CalendarScreen}
           options={{
             tabBarLabel: "Calendar",
             tabBarIcon: ({ color, size }) => (
@@ -28,16 +24,6 @@ export default function App() {
             ),
           }}
         />
-                {/* <Tab.Screen
-          name="Cycle"
-          component={CycleScreen}
-          options={{
-            tabBarLabel: "Your Cycle",
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="perm-contact-calendar" size={size} color={color} />
-            ),
-          }}
-        /> */}
         <Tab.Screen
           name="Projections"
           component={ProjectionScreen}

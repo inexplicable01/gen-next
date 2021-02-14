@@ -6,7 +6,6 @@ import {
   dateToCustomObject,
   monthdaysinyear,
   weekdaynames,
-  examwkair,
 } from "../../definitions/HMCalendarUtils";
 import Month from "../../models/month";
 import * as calendarActions from "../../store/actions/calendar";
@@ -20,6 +19,8 @@ if (!Array.prototype.last) {
 }
 
 const nummonths = 3;
+//Head React Component for the infinite scrolling calendar
+//Uses useeffect, usememo to make sure NOT the enture calendar is re-rendered.  Only the relevent months are rerendered.
 
 const InfiScrollCalendar = (props) => {
   const { selected, calendarnotes, monthkey, todayobj } = useSelector(
@@ -39,9 +40,8 @@ const InfiScrollCalendar = (props) => {
   const refCalendardates = useRef({});
   const [trig1, setTrig1] = useState(false);
   const [trig2, setTrig2] = useState(false);
-  // setTrig1
 
-  // checkfornotesdiff(calendarnotes, refCalendardates, calendardates);
+
   const [notes, setNotes] = useState(
     initiatesnotes(calendarnotes, calendardates)
   );
@@ -61,11 +61,12 @@ const InfiScrollCalendar = (props) => {
   }, []);
 
   const addPriorMonths = () => {
-
+    //Function called when user scrolls close to the top of the list.
+    //Adds months object to the calendardates state.
     setRefreshing(true);
-    setCalendarDates((cdates) => {
-      const monthstoadd = getcalendarmonths("AddPrevious", cdates);
-      return [...monthstoadd, ...cdates];
+    setCalendarDates((calendardates) => {
+      const monthstoadd = getcalendarmonths("AddPrevious", calendardates);
+      return [...monthstoadd, ...calendardates];
     });
     setRefreshing(false);
   };
@@ -100,8 +101,10 @@ const InfiScrollCalendar = (props) => {
     }
   }, []);
 
+  // this useeffect changes when calendarnotes changes
+  // notes is used to subdivide calendarnotes so that the month components are just attached to parts of notes.  
+  //Otherwise all the months would be rendered.
   useEffect(() => {
-    // console.log("triggered by calendar");
     for (const [monthyear, weeks] of Object.entries(notes)) {
       for (const [weeki, day] of Object.entries(weeks)) {
         for (const [daystring, dayarray] of Object.entries(day)) {
@@ -115,10 +118,8 @@ const InfiScrollCalendar = (props) => {
                     [daystring]: [...calendarnotes[daystring]],
                   },
                 };
-
                 return notes;
               });
-              setTrig1((trig) => !trig);
             }
           } else {
             setNotes((notes) => {
@@ -129,9 +130,8 @@ const InfiScrollCalendar = (props) => {
         }
       }
     }
-
-    // setNotes(refCalendardates.current)
-  }, [calendarnotes]);
+    setTrig1((trig) => !trig);//Trig used to refresh component
+  }, [calendarnotes]);  
   //
 
   useEffect(() => {

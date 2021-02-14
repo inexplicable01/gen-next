@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import Header from "../components/templates/Header";
-import { useSelector } from "react-redux";
-import TableRow from "../components/table/TableRow";
 import { projectionMatrix } from "../definitions/ProjectionUtils";
 import { useNavigation } from "@react-navigation/native";
 import ProjectionTable from "../components/projection/ProjectionTable";
 import ProjectionTitle from "../components/projection/ProjectionTitle";
-
-import SuperText from "../components/UI/SuperText";
+import { useDispatch, useSelector } from "react-redux";
+import * as personalActions from "../store/actions/personal";
+import { PERIOD } from "../definitions/Notices";
 // import { Dropdown } from "react-native-material-dropdown";
 
 const ProjectionScreen = (props) => {
@@ -30,11 +28,9 @@ const ProjectionScreen = (props) => {
     Aevent: false,
   });
 
-  //   console.log(Object.entries(pregancy));
   const navigation = useNavigation();
 
   const schedulePress = (schedule) => {
-    // console.log('wtf',schedule)
     setSchedule(schedule);
     setBoolState((boolstate) => {
       for (const key of Object.keys(boolstate)) {
@@ -48,11 +44,20 @@ const ProjectionScreen = (props) => {
   };
 
   const gotoCalendar = () => {
-    navigation.navigate("Agenda");
+    navigation.navigate("Calendar");
   };
-  // console.log("projection render", Date.now());
-  // console.log('wtf', tf[projecttype.item][1])
-  // console.log('boolstate',boolstate)
+
+  const dispatch = useDispatch();
+
+  const perioddates = {};
+  for (const [date, note] of Object.entries(calendar.calendarnotes)) {
+    if (note.includes(PERIOD)) {
+      perioddates[date] = PERIOD;
+    }
+  }
+  // console.log('what')
+  dispatch(personalActions.setSumCycle(perioddates));
+
   return (
     <View style={styles.mainview}>
       <Header extrastyles={{ flex: 2 }} title={"Projection"} />
@@ -61,7 +66,7 @@ const ProjectionScreen = (props) => {
           style={{ backgroundColor: "#FF89DE", width: "100%", paddingTop: 4 }}
         >
           <Text style={styles.projecttext}>
-            Project from :{" "}
+            Project from :
             <Text
               style={{ color: "blue", textDecorationLine: "underline" }}
               onPress={gotoCalendar}
@@ -69,14 +74,13 @@ const ProjectionScreen = (props) => {
               {calendar.selected}
             </Text>
           </Text>
-          {/* <Button title='ti' onPress={changeblah}/> */}
+
           <View style={{ width: "100%", borderRadius: 10 }}>
             <FlatList
               data={Object.keys(projectionMatrix)}
               keyExtractor={(item) => item}
               horizontal={true}
               renderItem={(projecttype, index, sep) => {
-                // const blue = [0, 0, 0, 0, schedule===projecttype.item, 1, 1 ,1]
                 const blue = schedule === projecttype.item;
                 return (
                   <TouchableOpacity
@@ -90,13 +94,17 @@ const ProjectionScreen = (props) => {
                         : styles.projectionnbox
                     }
                   >
-                    <SuperText
-                      text={projecttype.item}
-                      schedule={schedule}
-                      deeper={boolstate}
-                      // schedule = {schedule}
-                      index={projecttype.index}
-                    />
+                    <View>
+                      <Text
+                        style={
+                          schedule == projecttype.item
+                            ? { color: "white" }
+                            : { color: "black" }
+                        }
+                      >
+                        {projecttype.item}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 );
               }}
@@ -105,15 +113,15 @@ const ProjectionScreen = (props) => {
           <ProjectionTitle schedule={schedule} />
         </View>
         <View style={styles.dataview}>
-            {schedule ? (
-              <ProjectionTable
-                schedule={schedule}
-                curdateobj={calendar.curdateobj}
-                calendarnotes={calendar.calendarnotes}
-              />
-            ) : (
-              <Text> Select a type of Projection</Text>
-            )}
+          {schedule ? (
+            <ProjectionTable
+              schedule={schedule}
+              curdateobj={calendar.curdateobj}
+              calendarnotes={calendar.calendarnotes}
+            />
+          ) : (
+            <Text> Select a type of Projection</Text>
+          )}
         </View>
       </View>
     </View>
